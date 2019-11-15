@@ -56,7 +56,7 @@ import org.apache.spark.SparkConf
           .read
           .option("header", true) // utilise la première ligne du (des) fichier(s) comme header
           .option("inferSchema", "true") // pour inférer le type de chaque colonne (Int, String, etc.)
-          .csv("/home/jorge/Documents/Cours/Spark/RepoAdotTPs/data/train_clean.csv")
+          .csv("data/train_clean.csv")
 
         println(s"Nombre de lignes : ${df.count}")
         println(s"Nombre de colonnes : ${df.columns.length}")
@@ -93,6 +93,7 @@ import org.apache.spark.SparkConf
 
         //        df3.write.parquet("/home/jorge/Documents/Git/spark_project_kickstarter_2019_2020/cleanData.parquet")
         df3.show(5)
+
       }
     }
 

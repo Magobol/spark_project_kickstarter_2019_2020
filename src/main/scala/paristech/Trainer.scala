@@ -57,7 +57,7 @@ object Trainer {
       *       if problems with unimported modules => sbt plugins update
       *
       ********************************************************************************/
-    val df:DataFrame = spark.read.parquet("/home/jorge/Documents/Cours/Spark/RepoAdotTPs/data/prepared_trainingset/")
+    val df:DataFrame = spark.read.parquet("prepared_trainingset/")
 
 
     val tokenizer = new RegexTokenizer()
@@ -146,9 +146,8 @@ object Trainer {
     println("Test set accuracy for Model 1 = " + f1)
     println("Test set accuracy for the best model of the Grid Search is = " + f1best)
 
+    predictions.groupBy("final_status", "predictions").count.show()
 
 
-    println("hello world ! from Trainer")
-
-  }
+      }
 }

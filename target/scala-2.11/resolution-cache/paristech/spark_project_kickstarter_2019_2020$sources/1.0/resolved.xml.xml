@@ -4,7 +4,7 @@
 		module="spark_project_kickstarter_2019_2020$sources"
 		revision="1.0"
 		status="integration"
-		publication="20191019215121"
+		publication="20191031155210"
 	/>
 	<configurations>
 		<conf name="compile" visibility="public" description=""/>
