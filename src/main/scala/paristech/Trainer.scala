@@ -108,11 +108,11 @@ object Trainer {
       .setMaxIter(20)
 
     val pipeline = new Pipeline()
-      .setStages(Array(tokenizer, remover,cvModel,idf,indexerCountry, indexerCurrency,encoder, assembler,lr ))
+      .setStages(Array(tokenizer,remover,cvModel,idf,indexerCountry, indexerCurrency,encoder, assembler,lr))
 
 
     val Array(train,test) = df.randomSplit(Array[Double](0.9, 0.1))
-    val size = (train.count,test.count)
+//    val size = (train.count,test.count)
 
 
     val model1 = pipeline.fit(train)
