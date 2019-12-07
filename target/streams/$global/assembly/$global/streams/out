@@ -1,7 +1,7 @@
 [0m[[0m[0mdebug[0m] [0m[0mCalculate mappings...[0m
 [0m[[0m[0mdebug[0m] [0m[0mChecking every *.class/*.jar file's SHA-1.[0m
 [0m[[0m[0mdebug[0m] [0m[0mMerging files...[0m
-[0m[[0m[0mdebug[0m] [0m[0mSHA-1: 485c2607daf3e4fdce046b56fc2064aa8304503d[0m
+[0m[[0m[0mdebug[0m] [0m[0mSHA-1: 06158f56c0223281c7e028b5736825123a76168b[0m
 [0m[[0m[0minfo[0m] [0m[0mPackaging /home/jorge/Documents/Git/spark_project_kickstarter_2019_2020/target/scala-2.11/spark_project_kickstarter_2019_2020-assembly-1.0.jar ...[0m
 [0m[[0m[0mdebug[0m] [0m[0mInput file mappings:[0m
 [0m[[0m[0mdebug[0m] [0m[0m	META-INF/spark_project_kickstarter_2019_2020.kotlin_module[0m

@@ -8,9 +8,9 @@ Some precisions:
 in the Preprocessor class, and not the data provided with the project.
 - Some extra-cleaning was made in order to boost performance. In particular, 
 commas were deleted in the description field. This was causing a bad importing
-with the csv function and several valuable entries were being dropped in the
-cleaning part
+with the read.csv function and several valuable data points were being dropped during the 
+pre-processing.
 
-- Best performances are reached with minDF = 35 and alpha = 1e-5 for the logistic regression.
+- Best performance was reached with minDF = 35 and alpha = 1e-5 for the logistic regression.
 - This parameters lead to f1 = 0.70 - 0.72, depending on the seed of the train/test split.
-    - For instance, with a seed = 100 in the train/test split, we obtain f1 = 0.71
+    - For instance, with a seed fixed to 100 in the train/test split, we obtain f1 = 0.71

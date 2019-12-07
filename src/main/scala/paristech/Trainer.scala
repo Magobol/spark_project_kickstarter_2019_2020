@@ -149,6 +149,7 @@ object Trainer {
     val cvStage = stages(2).asInstanceOf[CountVectorizerModel]
     val lrStage = stages(8).asInstanceOf[LogisticRegressionModel]
 
+    gridSearch.write.overwrite().save("trainedModel/gridSearchModel")
 
 
     predictions.groupBy("final_status", "predictions").count.show()
