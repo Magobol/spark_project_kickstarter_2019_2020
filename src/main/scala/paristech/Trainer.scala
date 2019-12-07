@@ -111,7 +111,7 @@ object Trainer {
       .setStages(Array(tokenizer,remover,cvModel,idf,indexerCountry, indexerCurrency,encoder, assembler,lr))
 
 
-    val Array(train,test) = df.randomSplit(Array[Double](0.9, 0.1))
+    val Array(train,test) = df.randomSplit(Array[Double](0.9, 0.1),seed = 100)
     val size = (train.count,test.count)
 
 
@@ -128,8 +128,8 @@ object Trainer {
 
 
     val grid = new ParamGridBuilder()
-      .addGrid(lr.regParam,Array(10e-10,10e-8,10e-6))
-      .addGrid(cvModel.minDF,Array(20.0,35.0,55.0))
+      .addGrid(lr.regParam,Array(10e-8,10e-6,10e-4,10e-2))
+      .addGrid(cvModel.minDF,Array(35.0,55.0,75,95))
       .build()
 
     val trainValidationSplit = new TrainValidationSplit()
