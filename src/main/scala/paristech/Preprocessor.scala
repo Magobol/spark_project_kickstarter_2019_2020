@@ -1,8 +1,6 @@
 package paristech
 
-
-import org.apache.spark.sql.SparkSession
-import org.apache.spark.sql.{DataFrame, SparkSession}
+import org.apache.spark.sql.{DataFrame, SaveMode, SparkSession}
 import org.apache.spark.sql.functions._
 import org.apache.spark.SparkConf
 
@@ -44,10 +42,6 @@ import org.apache.spark.SparkConf
           * if problems with unimported modules => sbt plugins update
           *
           * *******************************************************************************/
-
-        println("\n")
-        println("Hello World ! from Preprocessor")
-        println("\n")
 
         import spark.implicits._
 
@@ -91,8 +85,10 @@ import org.apache.spark.SparkConf
           .withColumn("currency", when(isnull($"currency"), " ").otherwise($"currency"))
 
 
-        //        df3.write.parquet("/home/jorge/Documents/Git/spark_project_kickstarter_2019_2020/cleanData.parquet")
-        df3.show(5)
+
+
+        df3.write.mode(SaveMode.Overwrite).parquet("/home/jorge/Documents/Git/spark_project_kickstarter_2019_2020/cleanData.parquet")
+        df3.show(50)
 
       }
     }

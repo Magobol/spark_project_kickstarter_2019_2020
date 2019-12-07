@@ -4,7 +4,7 @@
 		module="spark_project_kickstarter_2019_2020-build"
 		revision="0.1.0-SNAPSHOT"
 		status="integration"
-		publication="20191031151127"
+		publication="20191207183135"
 		e:sbtVersion="1.0" e:scalaVersion="2.12"
 	>
 		<description>

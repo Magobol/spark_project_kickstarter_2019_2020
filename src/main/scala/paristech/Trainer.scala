@@ -1,20 +1,14 @@
 package paristech
 
 import org.apache.spark.SparkConf
-
 import org.apache.spark.sql.SparkSession
-
 import org.apache.spark.sql.{DataFrame, SparkSession}
 import org.apache.spark.sql.functions._
 import org.apache.spark.SparkConf
-import org.apache.spark.ml.feature.{RegexTokenizer,StopWordsRemover,
-  StringIndexer,CountVectorizer,
-  CountVectorizerModel,VectorAssembler,
-  IDF,OneHotEncoderEstimator}
-
-import org.apache.spark.ml.classification.LogisticRegression
+import org.apache.spark.ml.feature.{CountVectorizer, CountVectorizerModel, IDF, OneHotEncoderEstimator, RegexTokenizer, StopWordsRemover, StringIndexer, VectorAssembler}
+import org.apache.spark.ml.classification.{LogisticRegression, LogisticRegressionModel}
 import org.apache.spark.ml.{Pipeline, PipelineModel}
-import org.apache.spark.ml.tuning.{CrossValidator, ParamGridBuilder,CrossValidatorModel,TrainValidationSplit}
+import org.apache.spark.ml.tuning.{CrossValidator, CrossValidatorModel, ParamGridBuilder, TrainValidationSplit}
 // import org.apache.spark.mllib.evaluation.BinaryClassificationMetrics
 // import org.apache.spark.ml.evaluation
 import org.apache.spark.ml.evaluation.MulticlassClassificationEvaluator
@@ -57,7 +51,13 @@ object Trainer {
       *       if problems with unimported modules => sbt plugins update
       *
       ********************************************************************************/
-    val df:DataFrame = spark.read.parquet("prepared_trainingset/")
+
+    import spark.implicits._
+
+//    val df:DataFrame = spark.read.parquet("prepared_trainingset/")
+    val df:DataFrame = spark.read.parquet("cleanData.parquet/")
+      .filter(!isnull($"text"))
+      .filter(!($"country" rlike "DE"))
 
 
     val tokenizer = new RegexTokenizer()
@@ -80,11 +80,11 @@ object Trainer {
       .setOutputCol("tfidf")
 
     val indexerCountry = new StringIndexer()
-      .setInputCol("country2")
+      .setInputCol("country")
       .setOutputCol("country_indexed")
 
     val indexerCurrency = new StringIndexer()
-      .setInputCol("currency2")
+      .setInputCol("currency")
       .setOutputCol("currency_indexed")
 
     val encoder = new OneHotEncoderEstimator()
@@ -112,7 +112,7 @@ object Trainer {
 
 
     val Array(train,test) = df.randomSplit(Array[Double](0.9, 0.1))
-//    val size = (train.count,test.count)
+    val size = (train.count,test.count)
 
 
     val model1 = pipeline.fit(train)
@@ -128,26 +128,37 @@ object Trainer {
 
 
     val grid = new ParamGridBuilder()
-      .addGrid(lr.regParam,Array(10e-8,10e-6,10e-4,10e-2))
-      .addGrid(cvModel.minDF,Array(55.0,75.0,95.0))
+      .addGrid(lr.regParam,Array(10e-10,10e-8,10e-6))
+      .addGrid(cvModel.minDF,Array(20.0,35.0,55.0))
       .build()
 
     val trainValidationSplit = new TrainValidationSplit()
       .setEstimator(pipeline)
       .setEvaluator(evaluator)
       .setEstimatorParamMaps(grid)
-      // 80% of the data will be used for training and the remaining 20% for validation.
       .setTrainRatio(0.7)
 
     val gridSearch = trainValidationSplit.fit(df)
     val gridSearchBestModel = gridSearch.bestModel
 
     val f1best = evaluator.evaluate(gridSearchBestModel.transform(test))
-    println("Test set accuracy for Model 1 = " + f1)
-    println("Test set accuracy for the best model of the Grid Search is = " + f1best)
+
+
+    val bestPipelineModel = gridSearchBestModel.asInstanceOf[PipelineModel]
+    val stages = bestPipelineModel.stages
+    val cvStage = stages(2).asInstanceOf[CountVectorizerModel]
+    val lrStage = stages(8).asInstanceOf[LogisticRegressionModel]
+
+
 
     predictions.groupBy("final_status", "predictions").count.show()
+    println("Train dataset size is : " + size._1)
+    println("Test dataset size is : " + size._2)
+    println("Test set accuracy for Model 1 = " + f1)
+    println("Test set accuracy for the best model of the Grid Search is = " + f1best)
+    println("Logistic Regression alpha optimal = " + lrStage.getRegParam)
+    println("minDF optimal = " + cvStage.getMinDF)
+//    println("Params for best model are : " + gridSearchBestModel.getParam(lr.getRegParam))
 
-
-      }
+  }
 }
